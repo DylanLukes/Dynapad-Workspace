@@ -1,0 +1,6 @@
+[submodule "src/dynapad"]
+	path = src/dynapad
+	url = git@github.com:DylanLukes/Dynapad.git
+[submodule "src/zuo"]
+	path = src/zuo
+	url = git@github.com:racket/zuo.git

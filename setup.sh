@@ -18,20 +18,22 @@ fi
 # Useful Variables
 # ================
 
-export DYNA_BIN_DIR=$(realpath ./bin)
-export DYNA_INCLUDE_DIR=$(realpath ./include)
-export DYNA_LIB_DIR=$(realpath ./lib)
-export DYNA_OPT_DIR=$(realpath ./opt)
-export DYNA_SRC_DIR=$(realpath ./src)
+DYNA_BIN_DIR=$(realpath ./bin)
+DYNA_INCLUDE_DIR=$(realpath ./include)
+DYNA_LIB_DIR=$(realpath ./lib)
+DYNA_OPT_DIR=$(realpath ./opt)
+DYNA_SRC_DIR=$(realpath ./src)
+
+DYNA_BREW="${DYNA_BIN_DIR}/brew"
+DYNA_GCC="${DYNA_BIN_DIR}/gcc"
+DYNA_RACKET="${DYNA_BIN_DIR}/racketcgc"
+DYNA_RACO="${DYNA_BIN_DIR}/racocgc"
 
 # ==============
 # Homebrew Setup
 # ==============
 
-export DYNA_BREW="${DYNA_BIN_DIR}/brew"
-
-BIN_DIR=$(realpath ./bin)
-HOMEBREW_PREFIX=$(realpath ./opt/brew)
+export HOMEBREW_PREFIX=$(realpath ./opt/brew)
 
 echo -n "Checking if Homebrew has been cloned... "
 if [[ -d "${HOMEBREW_PREFIX}/.git" ]]; then 
@@ -61,8 +63,11 @@ echo "OK"
 # ===================
 # GCC Toolchain Setup
 # ===================
-${DYNA_BREW} install gcc
 
+# To avoid fragility with linking (since brew doesn't link gcc -> gcc-\d+), pin v12.
+${DYNA_BREW} install gcc@12
+
+ln -sf "${HOMEBREW_PREFIX}/opt/gcc/bin/gcc-12" "${DYNA_BIN_DIR}/gcc"
 
 # ==================
 # Other Dependencies
@@ -75,7 +80,34 @@ ${DYNA_BREW} install \
     ninja \
     berkeley-db
 
-# ==================
-# Other Dependencies
-# ==================
+# ======
+# Racket 
+# ======
+
+export CC=${DYNA_GCC}
+export CFLAGS="-L${HOMEBREW_PREFIX}/include -I${HOMEBREW_PREFIX}/lib"
+
+pushd src/racket/racket/src  # yes... I know... I know...
+
+./configure --enable-macprefix --prefix="${DYNA_OPT_DIR}/racket" \
+    --enable-float \
+    --enable-foreign \
+    --disable-libs \
+    --disable-bcdefault \
+    --disable-csdefault \
+    --enable-cs \
+    --enable-bc \
+    --enable-gracket \
+    --enable-jit \
+    --enable-places \
+    --enable-futures \
+    --enable-pthread \
+    --enable-libffi
+
+make cgc
+make install-cgc
+
+popd # src/racket/racket/src
+
+ln -sf ${DYNA_OPT_DIR}/racket/bin/* ${DYNA_BIN_DIR}
 

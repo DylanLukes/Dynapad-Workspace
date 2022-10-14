@@ -1,2 +1,1 @@
-exec arch -x86_64 $SHELL
-uname -a
+exec arch -x86_64 env DYNAENV=1 $SHELL

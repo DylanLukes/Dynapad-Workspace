@@ -62,3 +62,20 @@ echo "OK"
 # GCC Toolchain Setup
 # ===================
 ${DYNA_BREW} install gcc
+
+
+# ==================
+# Other Dependencies
+# ==================
+
+${DYNA_BREW} install \
+    imagemagick@6 \
+    poppler \
+    cmake \
+    ninja \
+    berkeley-db
+
+# ==================
+# Other Dependencies
+# ==================
+

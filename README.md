@@ -1,5 +1,13 @@
 # Dynapad Workspace
 
+## Prerequisites:
+
+```sh
+softwareupdate --install-rosetta
+brew install coreutils
+xcode-select -p  # Ensure this returns /Library/Developer/CommandLineTools
+```
+
 ## Directory Structure
 
 ```sh

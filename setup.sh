@@ -4,30 +4,7 @@
 # Rosetta Shenanigans
 # ===================
 
-echo -n "Checking that host architecture is x86_64... "
-
-if [[ $(arch) == "arm64" ]]; then
-    echo "NO"
-    echo "Activating Rosetta 2 and re-running this script... "
-    exec arch -x86_64 $SHELL -i $0
-else
-    echo "OK"
-fi
-
-# ================
-# Useful Variables
-# ================
-
-DYNA_BIN_DIR=$(realpath ./bin)
-DYNA_INCLUDE_DIR=$(realpath ./include)
-DYNA_LIB_DIR=$(realpath ./lib)
-DYNA_OPT_DIR=$(realpath ./opt)
-DYNA_SRC_DIR=$(realpath ./src)
-
-DYNA_BREW="${DYNA_BIN_DIR}/brew"
-DYNA_GCC="${DYNA_BIN_DIR}/gcc"
-DYNA_RACKET="${DYNA_BIN_DIR}/racketcgc"
-DYNA_RACO="${DYNA_BIN_DIR}/racocgc"
+source init.sh
 
 # ==============
 # Homebrew Setup

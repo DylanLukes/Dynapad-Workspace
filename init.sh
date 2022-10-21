@@ -10,7 +10,9 @@ else
 fi
 
 # START setup 
+export HOMEBREW_PREFIX=$(realpath ./opt/brew)
 
+export DYNA_PREFIX=$(realpath .)
 export DYNA_BIN_DIR=$(realpath ./bin)
 export DYNA_INCLUDE_DIR=$(realpath ./include)
 export DYNA_LIB_DIR=$(realpath ./lib)
@@ -21,8 +23,14 @@ export DYNA_BREW="${DYNA_BIN_DIR}/brew"
 export DYNA_GCC="${DYNA_BIN_DIR}/gcc"
 export DYNA_RACKET="${DYNA_BIN_DIR}/racketcgc"
 export DYNA_RACO="${DYNA_BIN_DIR}/racocgc"
+export DYNA_RACKET_DIR="${DYNA_OPT_DIR}/racket"
+
+# Let homebrew do its setup...
+eval "$(${DYNA_BREW} shellenv)"
 
 export PATH="${DYNA_BIN_DIR}:${PATH}"
+export CC=${DYNA_GCC}
+export CFLAGS="-L${HOMEBREW_PREFIX}/include -I${HOMEBREW_PREFIX}/lib"
 
 # END setup
 
@@ -41,7 +49,7 @@ fi
 
 # If not being sourced, open a new shell with the environment set up.
 if [[ $IS_SOURCED == 0 ]]; then
-    echo -n "Dropping into configured x86_64 shell... "
+    echo -n "Dropping into configured x86_64 shell..."
     echo -n "Check `uname -m` to double-check you're definitely in x86_64!"
     exec arch -x86_64 env DYNA_ENV=1 $SHELL
 else

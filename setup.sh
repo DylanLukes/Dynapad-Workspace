@@ -45,17 +45,36 @@ echo "OK"
 ${DYNA_BREW} install gcc@12
 
 ln -sf "${HOMEBREW_PREFIX}/opt/gcc/bin/gcc-12" "${DYNA_BIN_DIR}/gcc"
+ln -sf "${HOMEBREW_PREFIX}/opt/gcc/bin/g++-12" "${DYNA_BIN_DIR}/g++"
+ln -sf "${HOMEBREW_PREFIX}/opt/gcc/bin/gcc-ar-12" "${DYNA_BIN_DIR}/ar"
+ln -sf "${HOMEBREW_PREFIX}/opt/gcc/bin/gcc-nm-12" "${DYNA_BIN_DIR}/nm"
+ln -sf "${HOMEBREW_PREFIX}/opt/gcc/bin/gcc-ranlib-12" "${DYNA_BIN_DIR}/ranlib"
+
+# Shadow the global `cc` and `c++` so CMake doesn't get confused.
+ln -sf "${DYNA_BIN_DIR}/gcc" "${DYNA_BIN_DIR}/cc" 
+ln -sf "${DYNA_BIN_DIR}/g++" "${DYNA_BIN_DIR}/c++"
 
 # ==================
 # Other Dependencies
 # ==================
 
+# Notes: 
+#   - MacOS provides Tcl/Tk,  but we need an x86_64 copy.
+#   - We also want our own copy of pkg-config.
 ${DYNA_BREW} install \
+    pkg-config \
+    tcl-tk \
     imagemagick@6 \
     poppler \
     cmake \
     ninja \
     berkeley-db
+
+ln -sf "${HOMEBREW_PREFIX}/opt/pkg-config/bin/pkg-config" "${DYNA_BIN_DIR}/pkg-config"
+
+# In our isolated x86_64 brew environment, this is safe to do. 
+# Do NOT do this globally on your machine!
+${DYNA_BREW} link imagemagick@6 --force
 
 # ======
 # Racket 
@@ -88,3 +107,6 @@ popd # src/racket/racket/src
 
 ln -sf ${DYNA_OPT_DIR}/racket/bin/* ${DYNA_BIN_DIR}
 
+# ================================
+# Build Dynapad as Normal (Mostly)
+# ================================

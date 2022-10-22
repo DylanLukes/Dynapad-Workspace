@@ -1,14 +1,5 @@
 #!/bin/zsh
 
-echo -n "Ensuring env config is done in x86_64... "
-if [[ $(arch) == "arm64" ]]; then
-    echo "NO"
-    echo "Activating Rosetta 2 and re-running this script... "
-    exec arch -x86_64 $SHELL -i $0
-else
-    echo "OK"
-fi
-
 # START setup 
 export HOMEBREW_PREFIX=$(realpath ./opt/brew)
 
@@ -29,8 +20,7 @@ export DYNA_RACKET_DIR="${DYNA_OPT_DIR}/racket"
 eval "$(${DYNA_BREW} shellenv)"
 
 export PATH="${DYNA_BIN_DIR}:${PATH}"
-export CC=${DYNA_GCC}
-export CFLAGS="-L${HOMEBREW_PREFIX}/include -I${HOMEBREW_PREFIX}/lib"
+# export CC=${DYNA_GCC}
 
 # END setup
 

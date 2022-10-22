@@ -22,16 +22,18 @@ popd # build
 
 # Disabled until cmake issue above can be figured out.
 
-# ${DYNA_RACO} pkg install cext-lib  # needed for racocgc ctool below
-# SUBPATH=$(${DYNA_RACKET} -e "(display (path->string (system-library-subpath)))")
-# SO_SUFFIX=$(${DYNA_RACKET} -e "(display (bytes->string/utf-8 (system-type 'so-suffix)))")
-# mkdir -p dynapad/compiled/bc/native/${SUBPATH}
-# ${DYNA_RACO} ctool --cgc \
-#         ++ldf -Wl,-rpath,"${PWD}/build/" \
-#         --ld dynapad/compiled/bc/native/${SUBPATH}/libdynapad_rkt${SO_SUFFIX} \
-#         "${PWD}/build/libdynapad${SO_SUFFIX}"
-# ${DYNA_RACO} pkg install --no-docs --auto gui compatibility
-# ${DYNA_RACO} pkg install dynapad-collects/ dynapad/
-# ${DYNA_RACO} make dynapad/base.rkt
-# ${DYNA_RACO} make apps/paddraw/paddraw.rkt
-# ${DYNA_RACO} make apps/uberapp/uberapp.rkt
+${DYNA_RACO} pkg install cext-lib  # needed for racocgc ctool below
+${DYNA_RACO} pkg install --no-docs --auto gui compatibility # needed for dynapad (docs are missing, need to skip)
+
+SUBPATH=$(${DYNA_RACKET} -e "(display (path->string (system-library-subpath)))")
+SO_SUFFIX=$(${DYNA_RACKET} -e "(display (bytes->string/utf-8 (system-type 'so-suffix)))")
+
+mkdir -p dynapad/compiled/bc/native/${SUBPATH}
+${DYNA_RACO} ctool --cgc \
+    ++ldf -Wl,-rpath,"${PWD}/build/" \
+    --ld dynapad/compiled/bc/native/${SUBPATH}/libdynapad_rkt${SO_SUFFIX} \
+    "${PWD}/build/libdynapad${SO_SUFFIX}"
+${DYNA_RACO} pkg install dynapad-collects/ dynapad/
+${DYNA_RACO} make dynapad/base.rkt
+${DYNA_RACO} make apps/paddraw/paddraw.rkt
+${DYNA_RACO} make apps/uberapp/uberapp.rkt

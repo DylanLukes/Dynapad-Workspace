@@ -39,8 +39,8 @@ fi
 
 # If not being sourced, open a new shell with the environment set up.
 if [[ $IS_SOURCED == 0 ]]; then
-    echo -n "Dropping into configured x86_64 shell..."
-    echo -n "Check `uname -m` to double-check you're definitely in x86_64!"
+    echo "Dropping into configured x86_64 shell..."
+    echo "Check \`uname -m\` to double-check you're definitely in x86_64!"
     exec arch -x86_64 env DYNA_ENV=1 $SHELL
 else
     echo "Environment configured by init.sh"
